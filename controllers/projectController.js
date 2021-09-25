@@ -1,6 +1,15 @@
-const Project = require('../models/Project')
+const Project = require('../models/Project');
+const { validationResult } = require('express-validator')
 
 exports.createProject = async (req, res) =>{
+
+    //check for errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+
+
     try {
         // create new project
         const project = new Project(req.body)
@@ -11,6 +20,19 @@ exports.createProject = async (req, res) =>{
         project.save();
         res.json(project);
         
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Hubo un error')
+    }
+}
+
+/// get all projects the user actual
+
+exports.getPojects = async (req, res) =>{
+    try {
+        console.log(req.user)
+        const projects = await Project.find({ creator: req.user.id}).sort({creator: -1 });
+        res.json({projects})
     } catch (error) {
         console.log(error);
         res.status(500).send('Hubo un error')
