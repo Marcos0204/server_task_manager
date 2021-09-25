@@ -27,5 +27,11 @@ router.put('/:id',
     taskController.updateTask
 )
 
+// delete task for project
+router.delete('/:id',
+    auth,
+    taskController.deleteTask
+)
+
 
 module.exports= router;

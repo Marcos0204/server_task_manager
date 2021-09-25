@@ -87,3 +87,30 @@ exports.updateTask = async (req, res) =>{
         res.status(500).send('Hubo un error, al crear la tarea')
     }
 }
+
+
+//delete task
+exports.deleteTask = async (req, res) =>{
+    try {
+        const { project } = req.body;
+        //if task exists
+        let taskExist = await Task.findById(req.params.id)
+        if (!taskExist){
+            return res.status(404).json({msg:'la tarea no existe'})
+        }
+
+        const existsProject = await Project.findById(project)
+        // verify project actual
+        if(existsProject.creator.toString() !== req.user.id){
+            return res.status(401).json({msg:'No autorizado'})
+        }
+        
+        //update task
+        await Task.findOneAndRemove({ _id: req.params.id});
+        res.json({msg:'tarea eliminada'})
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Hubo un error, al crear la tarea')
+    }
+}
