@@ -11,8 +11,9 @@ exports.createTask = async (req, res) =>{
         return res.status(400).json({errors: errors.array()})
     }
     
-    const { project } = req.body;
+
     try {
+        const { project } = req.body;
         const existsProject = await Project.findById(project)
         if (!existsProject){
             return res.status(404).json({msg:'proyecto no encontrado'})
@@ -29,6 +30,25 @@ exports.createTask = async (req, res) =>{
         console.log(error)
         res.status(500).send('Hubo un error, al crear la tarea')
     }
+}
 
+exports.getTasks = async(req, res)=>{
 
+    try {
+        const { project } = req.body;
+        const existsProject = await Project.findById(project)
+        if (!existsProject){
+            return res.status(404).json({msg:'proyecto no encontrado'})
+        }
+        // verify project actual
+        if(existsProject.creator.toString() !== req.user.id){
+            return res.status(401).json({msg:'No autorizado'})
+        }
+        //get task for project
+        const task = await Task.find({project});
+        res.json({task})
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Hubo un error, al crear la tarea')
+    }
 }
