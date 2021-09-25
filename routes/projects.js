@@ -15,10 +15,19 @@ router.post('/',
     projectController.createProject
 )
 
+//get all projects
 router.get('/',
     auth,
     projectController.getPojects
 )
 
+//update project
+router.put('/:id',
+    auth,
+    [
+        check('name', 'el nombre del  projecto es obligatorio').not().isEmpty()
+    ],
+    projectController.updateProject
+)
 
 module.exports = router;

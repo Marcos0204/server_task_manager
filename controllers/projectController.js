@@ -38,3 +38,25 @@ exports.getPojects = async (req, res) =>{
         res.status(500).send('Hubo un error')
     }
 }
+
+
+exports.updateProject = async (req, res) => {
+    //check for errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+
+    //extract project information
+    const {name} = req.body;
+    const newProject = {};
+    if(name) {
+        newProject.name = name
+    }
+    try {
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('error en el servidor... al actualizar')
+    }
+}
