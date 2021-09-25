@@ -4,6 +4,10 @@ exports.createProject = async (req, res) =>{
     try {
         // create new project
         const project = new Project(req.body)
+        // save creator via jwt
+        project.creator = req.user.id
+
+        //save project
         project.save();
         res.json(project);
         
