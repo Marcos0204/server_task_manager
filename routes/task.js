@@ -9,7 +9,8 @@ const { check } = require('express-validator')
 router.post('/',
     auth,
     [
-        check('name', 'el nombre del  projecto es obligatorio').not().isEmpty()
+        check('name', 'el nombre del  projecto es obligatorio').not().isEmpty(),
+        check('project', 'el proyecto  es obligatorio').not().isEmpty()
     ],
     taskController.createTask
 )
