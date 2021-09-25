@@ -52,3 +52,38 @@ exports.getTasks = async(req, res)=>{
         res.status(500).send('Hubo un error, al crear la tarea')
     }
 }
+
+
+//update task
+exports.updateTask = async (req, res) =>{
+    
+    try {
+        const { project, name, state } = req.body;
+        //if task exists
+        let taskExist = await Task.findById(req.params.id)
+        if (!taskExist){
+            return res.status(404).json({msg:'la tarea no existe'})
+        }
+
+        const existsProject = await Project.findById(project)
+        // verify project actual
+        if(existsProject.creator.toString() !== req.user.id){
+            return res.status(401).json({msg:'No autorizado'})
+        }
+        
+        //update task
+        const newTask = {}
+        if(name){
+            newTask.name = name
+        }
+        if(state){
+            newTask.state = state
+        }
+
+        taskExist = await Task.findOneAndUpdate({ _id: req.params.id }, newTask, { new: true} )
+        res.json({taskExist})
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Hubo un error, al crear la tarea')
+    }
+}
